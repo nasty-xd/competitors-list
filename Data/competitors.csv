@@ -1,0 +1,20 @@
+RegNumber,CompanyName,RegistrationDate,Status
+REG-A1B2C3D4,Innovate Inc.,2021-03-15,Active
+REG-X5Y6Z7W8,Quantum Solutions,2020-11-20,Inactive
+REG-P9O8I7U6,Apex Digital,2022-01-10,Active
+REG-L5K4J3H2,Starlight Ventures,2019-07-22,Active
+REG-G1F2E3D4,Phoenix Industries,2023-05-30,Active
+REG-C5B6A798,Nebula Corp,2021-09-05,Active
+REG-Z1Y2X3W4,Momentum Machines,2022-02-18,Active
+REG-V5U6T7S8,Orion Systems,2020-12-12,Active
+REG-R9Q0P1O2,Titanium Tech,2019-04-25,Active
+REG-N3M4L5K6,Galaxy Goods,2023-08-01,Active
+REG-J7H8G9F0,Pinnacle Partners,2021-06-14,Active
+REG-E1D2C3B4,Fusion Dynamics,2022-10-09,Active
+REG-A596B7C8,Silver Lining Co,2020-08-17,Active
+REG-D1E2F3G4,Evergreen Enterprises,2019-01-11,Active
+REG-H5J6K7L8,Blue-sky Biz,2023-11-27,Active
+
+REG-1C6F52B9,123,2025-10-16,Inactive
+REG-98BF260E,qwertt,2025-10-12,Pending
+REG-91C540C8,123,2025-12-21,Inactive

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Competitor List</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>// COMPETITOR_LIST //</h1>
+        </header>
+        
+        <main>
+            <div class="table-container">
+                <table id="competitor-table">
+                    <thead>
+                        <tr>
+                            <th>RegNumber</th>
+                            <th>Company Name</th>
+                            <th>Registration Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Data will be populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="form-container">
+                <h2>> Add New Competitor</h2>
+                <form id="add-competitor-form">
+                    <div class="form-group">
+                        <label for="companyName">Company_Name:</label>
+                        <input type="text" id="companyName" name="companyName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registrationDate">Registration_Date:</label>
+                        <input type="date" id="registrationDate" name="registrationDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <input type="text" id="status" name="status" required>
+                    </div>
+                    <button type="submit" class="btn">[APPEND_TO_LIST]</button>
+                </form>
+            </div>
+        </main>
+
+        <footer>
+            <p>STATUS: OK</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
