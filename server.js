@@ -1,81 +1,82 @@
-// Импортируем необходимые модули
-const express = require('express'); // Фреймворк для создания веб-сервера
-const fs = require('fs'); // Модуль для работы с файловой системой (чтение/запись файлов)
-const path = require('path'); // Модуль для работы с путями к файлам
-const cors = require('cors'); // Middleware для обработки CORS (Cross-Origin Resource Sharing)
-const crypto = require('crypto'); // Модуль для криптографических функций, используется для генерации ID
+// Import the necessary modules
+const express = require('express'); // A framework for creating a web server
+const fs = require('fs'); // A module for working with the file system (reading/writing files)
+const path = require('path'); // A module for working with file paths
+const cors = require('cors'); // Middleware for handling CORS (Cross-Origin Resource Sharing)
+const crypto = require('crypto'); // A module for cryptographic functions, used for generating IDs
 
-// Создаем экземпляр приложения Express
+// Create an instance of the Express application
 const app = express();
-// Определяем порт, на котором будет работать сервер
+// Define the port on which the server will run
 const PORT = 3000;
-// Составляем абсолютный путь к файлу с данными
+// Construct the absolute path to the data file
 const CSV_PATH = path.join(__dirname, 'Data', 'competitors.csv');
 
-// --- Middleware (Промежуточное ПО) ---
-// Используем CORS, чтобы разрешить запросы с других доменов (например, с нашего фронтенда)
+
+// Use CORS to allow requests from other domains (e.g., from our frontend)
 app.use(cors());
-// Middleware для разбора JSON-тела входящих запросов
+// Middleware for parsing the JSON body of incoming requests
 app.use(express.json());
-// Middleware для раздачи статических файлов (HTML, CSS, JS) из папки 'public'
+// Middleware for serving static files (HTML, CSS, JS) from the 'public' folder
 app.use(express.static('public'));
 
-// Функция для парсинга (разбора) данных из формата CSV
+// A function for parsing (processing) data from CSV format
 const parseCSV = (data) => {
-    // Преобразуем данные в строку, убираем пробелы по краям, делим на строки по символу новой строки и фильтруем пустые строки
+    // Convert the data to a string, trim whitespace from the edges, split into lines by the newline character, and filter out empty lines
     const lines = data.toString().trim().split('\n').filter(line => line.trim() !== '');
-    // Если строк меньше двух (заголовок + данные), возвращаем пустой массив
+    // If there are fewer than two lines (header + data), return an empty array
     if (lines.length < 2) return [];
-    // Первая строка - это заголовки. Делим ее по запятым и убираем пробелы у каждого заголовка
+    // The first line contains the headers. Split it by commas and trim whitespace from each header.
     const headers = lines[0].split(',').map(h => h.trim());
-    // Обрабатываем остальные строки (данные)
+    // Process the remaining lines (data)
+
     return lines.slice(1).map(line => {
-        // Делим строку с данными по запятым
+        // Split the data line by commas
         const values = line.split(',').map(v => v.trim());
-        // Если количество значений не совпадает с количеством заголовков, строка некорректна, возвращаем null
+        // If the number of values doesn't match the number of headers, the row is invalid—return null.
         if (values.length !== headers.length) return null;
-        // Создаем объект для текущей строки
+        // Create an object for the current row
         let obj = {};
-        // Заполняем объект: каждому заголовку сопоставляем соответствующее значение
+        // Populate the object: assign each header its corresponding value
         headers.forEach((header, index) => {
             obj[header] = values[index];
         });
         return obj;
-    }).filter(Boolean); // Фильтруем все null значения, которые могли появиться из-за некорректных строк
+    }).filter(Boolean); // Filter out all null values that may have appeared due to invalid rows
 };
 
-// --- API Endpoints (Точки доступа API) ---
+// --- API Endpoints  ---
 
-// Endpoint для получения списка всех конкурентов (метод GET)
+// Endpoint for retrieving the list of all competitors (GET method)
 app.get('/api/competitors', (req, res) => {
-    // Проверяем, существует ли файл CSV
+    // Check if the CSV file exists
     if (!fs.existsSync(CSV_PATH)) {
         return res.status(404).json({ message: 'Competitors file not found.' });
     }
-    // Читаем файл в кодировке utf8
+    // Read the file with UTF-8 encoding
     fs.readFile(CSV_PATH, 'utf8', (err, data) => {
-        // Если произошла ошибка при чтении, отправляем ошибку 500
+        // If an error occurs while reading, send a 500 error
         if (err) {
             return res.status(500).json({ message: 'Error reading competitors file.' });
         }
-        // Парсим CSV данные
+        // Parse the CSV data
         const competitors = parseCSV(data);
-        // Отправляем данные в формате JSON
+        // Send the data in JSON format
         res.json(competitors);
     });
 });
 
-// Endpoint для добавления нового конкурента (метод POST)
+// Endpoint for adding a new competitor (POST method)
 app.post('/api/competitors', (req, res) => {
-    // Извлекаем данные из тела запроса
+    // Extract data from the request body
     const { companyName, registrationDate, status } = req.body;
 
-    // Проверяем, были ли предоставлены все необходимые данные
+    // Check whether all required data has been provided
     if (!companyName || !registrationDate || !status) {
         return res.status(400).json({ message: 'Company name and registration date are required.' });
     }
 
-    // Создаем объект нового конкурента с уникальным RegNumber
+    // Create a new competitor object with a unique RegNumber
     const newCompetitor = {
         RegNumber: `REG-${crypto.randomUUID().slice(0, 8).toUpperCase()}`,
         CompanyName: companyName,
@@ -83,26 +84,26 @@ app.post('/api/competitors', (req, res) => {
         Status: status
     };
 
-    // Формируем строку для добавления в CSV файл
+    // Construct a string to append to the CSV file
     const csvLine = `\n${newCompetitor.RegNumber},${newCompetitor.CompanyName},${newCompetitor.RegistrationDate},${newCompetitor.Status}`;
 
-    // Добавляем новую строку в конец файла
+    // Append the new row to the end of the file
     fs.appendFile(CSV_PATH, csvLine, 'utf8', (err) => {
-        // Если произошла ошибка при записи, отправляем ошибку 500
+        // If an error occurs while writing, send a 500 error
         if (err) {
             return res.status(500).json({ message: 'Error saving new competitor.' });
         }
-        // Отправляем успешный статус 201 (Created) и данные нового конкурента
+        // Send a successful 201 (Created) status and the new competitor's data
         res.status(201).json(newCompetitor);
     });
 });
 
-// Главный endpoint, который отдает HTML-страницу приложения
+// Main endpoint that serves the application's HTML page
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Запускаем сервер и начинаем прослушивать указанный порт
+// Start the server and begin listening on the specified port
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
