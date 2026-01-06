@@ -1,9 +1,9 @@
 // Add an event listener that will trigger when the entire HTML document structure (DOM) has been loaded and is ready.
 document.addEventListener('DOMContentLoaded', () => {
     // Finding the key elements on the page.
-    const competitorTableBody = document.querySelector('#competitor-table tbody'); // Тело таблицы для вывода данных
-    const addCompetitorForm = document.getElementById('add-competitor-form'); // Форма для добавления новой записи
-    const api_url = 'http://localhost:3000/api/competitors'; // URL нашего бэкенд API
+    const competitorTableBody = document.querySelector('#competitor-table tbody'); // Table body for displaying data.
+    const addCompetitorForm = document.getElementById('add-competitor-form'); // Form for adding a new record.
+    const api_url = 'http://localhost:3000/api/competitors'; // URL of our backend API.
 
     // An asynchronous function for fetching and displaying the list of competitors.
     const fetchAndDisplayCompetitors = async () => {
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             // If an error occurs at any stage (for example, the server is unavailable)
-            console.error("Fetch error: ", error); // Выводим ошибку в консоль
+            console.error("Fetch error: ", error); // Output the error to the console.
             // Display the error message directly in the table.
             competitorTableBody.innerHTML = `<tr><td colspan="3">Error loading data. Is the server running?</td></tr>`;
         }
