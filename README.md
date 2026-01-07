@@ -34,8 +34,7 @@ Dynamic display – table updates automatically when new entries are added
 1. Clone the repository:
 
 ```bash
-git clone <repository_URL>
-cd competitor_list
+git clone https://github.com/nasty-xd/competitors-list.git
 ```
 
 2. Install dependencies:
